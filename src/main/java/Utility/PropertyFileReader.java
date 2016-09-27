@@ -11,10 +11,10 @@ import java.util.Properties;
  */
 public class PropertyFileReader {
 
-    public static Properties locatorFileReader()
+    public static Properties locatorFileReader(String filePath)
 
     {
-        File file = new File("C:\\Users\\xeadmin\\IdeaProjects\\selenium-ui\\src\\main\\java\\Utility\\locators.properties");
+        File file = new File(filePath);
 
         FileInputStream fileInput = null;
         try {

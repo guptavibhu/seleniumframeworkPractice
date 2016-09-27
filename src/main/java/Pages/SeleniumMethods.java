@@ -1,12 +1,12 @@
 package Pages;
 
 import Utility.PropertyFileReader;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
 
 import java.util.Properties;
 
@@ -16,76 +16,98 @@ import java.util.Properties;
 public class SeleniumMethods {
 
     WebDriver driver = null;
-    Properties prop;
+    Properties prop, propValue;
 
-    public void OpenUrl(String urlString){
 
-        prop=PropertyFileReader.locatorFileReader();
+    public String OpenUrl(String urlString) {
+
+        prop = PropertyFileReader.locatorFileReader("C:\\Users\\xeadmin\\IdeaProjects\\selenium-ui\\src\\main\\java\\Utility\\locators.properties");
+        propValue = PropertyFileReader.locatorFileReader("C:\\Users\\xeadmin\\IdeaProjects\\selenium-ui\\src\\main\\java\\Utility\\locatorsvalue.properties");
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\vibhu.gupta\\chromedriver_win32\\chromedriver.exe");
-        driver =new ChromeDriver();
-        driver.get(prop.getProperty(urlString));
+        try {
+            driver = new ChromeDriver();
+            driver.get(propValue.getProperty(urlString));
+        } catch (Exception e) {
+            e.getMessage();
+            return "Fail";
+        }
 
+        return "Pass";
     }
 
-    public  void clickButton(String locator)
-    {
-        WebElement element=null;
+    public String clickButton(String locator) {
+        WebElement element = null;
         String[] loc = prop.getProperty(locator).split("=@");
         String locatorType = loc[0];
         String locatorValue = loc[1];
+        try {
 
-        switch (locatorType) {
 
-            case "id":
-                 element = driver.findElement(By.id(locatorValue));
-                break;
-            case "name":
-                 element = driver.findElement(By.name(locatorValue));
-                break;
-            case "xpath":
-                 element = driver.findElement(By.xpath(locatorValue));
-                break;
+            switch (locatorType) {
+
+                case "id":
+                    element = driver.findElement(By.id(locatorValue));
+                    break;
+                case "name":
+                    element = driver.findElement(By.name(locatorValue));
+                    break;
+                case "xpath":
+                    element = driver.findElement(By.xpath(locatorValue));
+                    break;
                 default:
                     element = driver.findElement(By.cssSelector(locatorValue));
 
+            }
+            element.click();
+        } catch (Exception e) {
+            e.getMessage();
+            return "Fail";
         }
-        element.click();
-
+        return "Pass";
     }
 
-//    public  static void clickButtonXpath(String locator)
-//    {
-//        WebElement element = driver.findElement(By.xpath(prop.getProperty(locator)));
-//        element.click();
-//    }
 
-    public void enterText(String locator, String value){
+    public String enterText(String locator, String value) {
 
-        WebElement element=null;
+        WebElement element = null;
         String[] loc = prop.getProperty(locator).split("=@");
         String locatorType = loc[0];
         String locatorValue = loc[1];
+        try {
 
-        switch (locatorType) {
 
-            case "id":
-                element = driver.findElement(By.id(locatorValue));
-                break;
-            case "name":
-                element = driver.findElement(By.name(locatorValue));
-                break;
-            case "xpath":
-                element = driver.findElement(By.xpath(locatorValue));
-                break;
-            default:
-                element = driver.findElement(By.cssSelector(locatorValue));
+            switch (locatorType) {
 
+                case "id":
+                    element = driver.findElement(By.id(locatorValue));
+                    break;
+                case "name":
+                    element = driver.findElement(By.name(locatorValue));
+                    break;
+                case "xpath":
+                    element = driver.findElement(By.xpath(locatorValue));
+                    break;
+                default:
+                    element = driver.findElement(By.cssSelector(locatorValue));
+
+            }
+
+            element.sendKeys(propValue.getProperty(value));
+        } catch (Exception e) {
+            e.getMessage();
+            return "Fail";
         }
 
-        element.sendKeys(prop.getProperty(value));
+        return "Pass";
     }
 
-    public void alertHandle(){
+    /*
+        public void uploadImage() {
+
+         UploadImage.uploadfile();
+    }
+    */
+    public void alertHandle() {
         Alert confirmationAlert = driver.switchTo().alert();
         confirmationAlert.accept();
     }
